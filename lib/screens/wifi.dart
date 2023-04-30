@@ -3,9 +3,14 @@ import 'package:edp/drawer.dart';
 import 'package:edp/screens/password.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-class WifiNetworks extends StatefulWidget {
-  const WifiNetworks({Key? key}) : super(key: key);
+import 'package:provider/provider.dart';
 
+import '../processing/models.dart';
+import '../processing/providers.dart';
+
+class WifiNetworks extends StatefulWidget {
+  const WifiNetworks({Key? key, required this.wifis}) : super(key: key);
+  final List<wifiModel> wifis;
   @override
   State<WifiNetworks> createState() => _WifiNetworksState();
 }
@@ -13,7 +18,8 @@ class WifiNetworks extends StatefulWidget {
 class _WifiNetworksState extends State<WifiNetworks> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(child: Scaffold(
+    return SafeArea(
+        child: Scaffold(
       backgroundColor: kPrimary,
       drawer: SideDrawer(),
       appBar: AppBar(
@@ -26,19 +32,43 @@ class _WifiNetworksState extends State<WifiNetworks> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Available Networks',
-                style: GoogleFonts.lato(
-                  fontSize: 22,
-                  color: Colors.white
-                ),
+              Text(
+                'Current default',
+                style: GoogleFonts.lato(fontSize: 22, color: Colors.white),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
-              kRow(val: 'Wifi 1'),
-              kRow(val: 'Wifi 2'),
-              kRow(val: 'Wifi 3'),
-              kRow(val: 'Wifi 4')
+              Padding(
+                padding:EdgeInsets.all(8),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.wifi,
+                      color: Colors.white,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      Provider.of<mainProv>(context, listen: false).ssid,
+                      style: GoogleFonts.lato(fontSize: 18, color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Text(
+                'Available Networks',
+                style: GoogleFonts.lato(fontSize: 22, color: Colors.white),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              for (int i = 0; i < widget.wifis.length; i++)
+                kRow(val: widget.wifis[i])
             ],
           ),
         ),
@@ -49,7 +79,7 @@ class _WifiNetworksState extends State<WifiNetworks> {
 
 class kRow extends StatelessWidget {
   const kRow({Key? key, required this.val}) : super(key: key);
-  final String val;
+  final wifiModel val;
 
   @override
   Widget build(BuildContext context) {
@@ -57,22 +87,29 @@ class kRow extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: GestureDetector(
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const Password()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Password(
+                        currwifi: val,
+                      )));
         },
         child: Row(
           children: [
-            Icon(Icons.wifi,
-            color: Colors.white,),
-            SizedBox(width: 10,),
-            Text(val,
-            style: GoogleFonts.lato(
-              fontSize: 18,
-              color: Colors.white
-            ),),
+            Icon(
+              Icons.wifi,
+              color: Colors.white,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              val.name,
+              style: GoogleFonts.lato(fontSize: 18, color: Colors.white),
+            ),
           ],
         ),
       ),
     );
   }
 }
-
