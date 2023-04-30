@@ -1,16 +1,16 @@
-class httpres {
+class HttpRes {
   bool status;
   String message;
   var data;
-  httpres({required this.message, required this.status, required this.data});
+  HttpRes({required this.message, required this.status, required this.data});
 }
 
-class wifiModel {
+class WifiModel {
   String name;
   int strength;
-  wifiModel({required this.name, required this.strength});
+  WifiModel({required this.name, required this.strength});
 
-  factory wifiModel.fromJSON(Map<String, dynamic> x) {
-    return wifiModel(name: x['name'], strength: x['strength']);
+  factory WifiModel.fromJSON(Map<String, dynamic> x) {
+    return WifiModel(name: x['name'], strength: x['strength']);
   }
 }

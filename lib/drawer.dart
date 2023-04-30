@@ -28,7 +28,7 @@ class _SideDrawerState extends State<SideDrawer> {
                 onTap: () {
                   Navigator.pop(context);
                 },
-                child: Icon(
+                child: const Icon(
                   Icons.arrow_back,
                   color: Colors.white,
                   size: 30,
@@ -38,8 +38,8 @@ class _SideDrawerState extends State<SideDrawer> {
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
             child: GestureDetector(
               onTap: () {
-                List<wifiModel> currwifis =
-                    Provider.of<mainProv>(context, listen: false).wifis;
+                List<WifiModel> currwifis =
+                    Provider.of<MainProv>(context, listen: false).wifis;
                 Navigator.push(
                     context,
                     MaterialPageRoute(

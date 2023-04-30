@@ -4,75 +4,95 @@ import 'package:edp/constant.dart';
 import 'package:edp/processing/models.dart';
 import 'package:http/http.dart' as http;
 
-Future<httpres> getWifi() async {
+Future<HttpRes> getWifi() async {
   try {
-    http.Response res = await http.get(Uri.parse("$serverURL/"));
-    print(res.statusCode);
+    http.Response res = await http
+        .get(Uri.parse("$serverURL/"))
+        .timeout(const Duration(seconds: 10), onTimeout: () {
+      return http.Response('Error', 408);
+    });
     if (res.statusCode == 200) {
       String responseBody = res.body;
-      print(jsonDecode(responseBody));
       var data = jsonDecode(responseBody)['st'];
       String ssid = jsonDecode(responseBody)['wifi'];
       String email = jsonDecode(responseBody)['email'];
       String phone = jsonDecode(responseBody)['phone'];
-      List<wifiModel> wifis = [];
+      List<WifiModel> wifis = [];
       for (var x in data) {
-        wifis.add(wifiModel.fromJSON(x));
+        wifis.add(WifiModel.fromJSON(x));
       }
-      return httpres(
+      return HttpRes(
           message: "Paired successfully",
           status: true,
           data: [wifis, ssid, email, phone]);
+    } else if (res.statusCode == 408) {
+      return HttpRes(
+          message: "You have not connected to device wifi!",
+          status: false,
+          data: []);
     } else {
-      return httpres(
+      return HttpRes(
           message: responseMeaning(res.statusCode), status: false, data: []);
     }
   } catch (e) {
-    print(e);
-    return httpres(message: "", status: false, data: []);
+    return HttpRes(message: "An Error occurred!", status: false, data: []);
   }
 }
 
-Future<httpres> setContact(String email, String phone) async {
+Future<HttpRes> setContact(String email, String phone) async {
   try {
-    http.Response res = await http.post(
+    http.Response res = await http
+        .post(
       Uri.parse("$serverURL/contactsetting"),
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       encoding: Encoding.getByName('utf-8'),
       body: {"email": email, "phone": phone},
-    );
+    )
+        .timeout(const Duration(seconds: 10), onTimeout: () {
+      return http.Response('Error', 408);
+    });
     if (res.statusCode == 200) {
-      return httpres(message: "Saved!", status: true, data: []);
+      return HttpRes(message: "Saved!", status: true, data: []);
+    } else if (res.statusCode == 408) {
+      return HttpRes(
+          message: "Connection to device lost", status: false, data: []);
     } else {
-      return httpres(
+      return HttpRes(
           message: responseMeaning(res.statusCode), status: false, data: []);
     }
   } catch (e) {
-    return httpres(
+    return HttpRes(
         message: "Error communicating, please retry", status: false, data: []);
   }
 }
 
-Future<httpres> setWifi(String ssid, String pass) async {
+Future<HttpRes> setWifi(String ssid, String pass) async {
   try {
-    http.Response res = await http.post(
+    http.Response res = await http
+        .post(
       Uri.parse("$serverURL/wifisetting"),
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       encoding: Encoding.getByName('utf-8'),
       body: {"ssid": ssid, "pass": pass},
-    );
+    )
+        .timeout(const Duration(seconds: 10), onTimeout: () {
+      return http.Response('Error', 408);
+    });
     if (res.statusCode == 200) {
-      return httpres(message: "Saved!", status: true, data: []);
+      return HttpRes(message: "Saved!", status: true, data: []);
+    } else if (res.statusCode == 408) {
+      return HttpRes(
+          message: "Connection to device lost", status: false, data: []);
     } else {
-      return httpres(
+      return HttpRes(
           message: responseMeaning(res.statusCode), status: false, data: []);
     }
   } catch (e) {
-    return httpres(
+    return HttpRes(
         message: "Error communicating, please retry", status: false, data: []);
   }
 }

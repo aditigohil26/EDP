@@ -23,8 +23,8 @@ class _ContactUpdateState extends State<ContactUpdate> {
   bool _loading = false;
   @override
   void initState() {
-    email = Provider.of<mainProv>(context, listen: false).email;
-    phone = Provider.of<mainProv>(context, listen: false).phone;
+    email = Provider.of<MainProv>(context, listen: false).email;
+    phone = Provider.of<MainProv>(context, listen: false).phone;
     super.initState();
   }
 
@@ -32,7 +32,7 @@ class _ContactUpdateState extends State<ContactUpdate> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        drawer: SideDrawer(),
+        drawer: const SideDrawer(),
         appBar: AppBar(
           backgroundColor: kPrimary,
         ),
@@ -57,7 +57,7 @@ class _ContactUpdateState extends State<ContactUpdate> {
                       color: Colors.white,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   TextFormField(
@@ -90,7 +90,7 @@ class _ContactUpdateState extends State<ContactUpdate> {
                       email = value?.trim() ?? '';
                     },
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Text(
@@ -100,7 +100,7 @@ class _ContactUpdateState extends State<ContactUpdate> {
                       color: Colors.white,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   TextFormField(
@@ -131,7 +131,7 @@ class _ContactUpdateState extends State<ContactUpdate> {
                       }
                     },
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Center(
@@ -142,15 +142,19 @@ class _ContactUpdateState extends State<ContactUpdate> {
                           setState(() {
                             _loading = true;
                           });
-                          httpres res = await setContact(email, phone);
+                          HttpRes res = await setContact(email, phone);
                           setState(() {
                             _loading = false;
                           });
                           if (res.status && context.mounted) {
-                            successPopup(context, "Saved successfully");
+                            await successPopup(context,
+                                "Saved successfully, Rebooting device");
+                            if (context.mounted) {
+                              Navigator.popUntil(context,
+                                  (Route<dynamic> route) => route.isFirst);
+                            }
                           } else {
-                            errorPopup(
-                                context, "An error occurred while saving");
+                            errorPopup(context, res.message);
                           }
                         }
                       },

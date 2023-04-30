@@ -1,7 +1,5 @@
 import 'package:edp/processing/providers.dart';
 import 'package:edp/screens/connectmcu.dart';
-import 'package:edp/screens/contactupdate.dart';
-import 'package:edp/screens/wifi.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => mainProv()),
+        ChangeNotifierProvider(create: (_) => MainProv()),
       ],
       child: MaterialApp(
         theme: ThemeData(

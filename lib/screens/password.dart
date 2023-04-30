@@ -8,7 +8,7 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class Password extends StatefulWidget {
   const Password({Key? key, required this.currwifi}) : super(key: key);
-  final wifiModel currwifi;
+  final WifiModel currwifi;
   @override
   State<Password> createState() => _PasswordState();
 }
@@ -27,7 +27,7 @@ class _PasswordState extends State<Password> {
           onTap: () {
             Navigator.pop(context);
           },
-          child: Icon(
+          child: const Icon(
             Icons.arrow_back,
             color: Colors.white,
           ),
@@ -50,7 +50,7 @@ class _PasswordState extends State<Password> {
                   color: Colors.white,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               TextField(
@@ -70,13 +70,17 @@ class _PasswordState extends State<Password> {
                   setState(() {
                     _loading = true;
                   });
-                  httpres res = await setWifi(widget.currwifi.name, val);
+                  HttpRes res = await setWifi(widget.currwifi.name, val);
                   setState(() {
                     _loading = false;
                   });
                   if (res.status && context.mounted) {
-                    await successPopup(context, res.message);
-                    Navigator.pop(context);
+                    await successPopup(
+                        context, '${res.message}, Rebooting device!');
+                    if (context.mounted) {
+                      Navigator.popUntil(
+                          context, (Route<dynamic> route) => route.isFirst);
+                    }
                   } else {
                     errorPopup(context, res.message);
                   }
