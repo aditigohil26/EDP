@@ -41,6 +41,9 @@ class _ContactUpdateState extends State<ContactUpdate> {
           key: formkey,
           child: ModalProgressHUD(
             inAsyncCall: _loading,
+            progressIndicator: const CircularProgressIndicator(
+              color: Colors.white,
+            ),
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),

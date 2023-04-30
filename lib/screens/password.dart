@@ -35,6 +35,9 @@ class _PasswordState extends State<Password> {
       ),
       body: ModalProgressHUD(
         inAsyncCall: _loading,
+        progressIndicator: const CircularProgressIndicator(
+          color: Colors.white,
+        ),
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(

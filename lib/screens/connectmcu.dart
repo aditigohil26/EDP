@@ -25,7 +25,7 @@ class _ConnectMCUState extends State<ConnectMCU> {
       backgroundColor: kPrimary,
       body: ModalProgressHUD(
         inAsyncCall: _loading,
-        progressIndicator: CircularProgressIndicator(
+        progressIndicator: const CircularProgressIndicator(
           color: Colors.white,
         ),
         child: Column(
