@@ -1,4 +1,4 @@
-# edp
+# WalkerMate App
 
 A Flutter project for the mobile application Walker Mate
 
